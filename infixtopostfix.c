@@ -1,11 +1,10 @@
 #include <stdio.h>
-#define Max 100
 
-char stack[Max];
+char stack[100];
 int top = -1;
 
 void push(char c) {
-    if (top < Max - 1) {
+    if (top < 100 - 1) {
         top++;
         stack[top] = c;
     }
@@ -35,79 +34,43 @@ int precedence(char op) {
     return 0;
 }
 
-int isDigit(char c) {
-    return (c >= '0' && c <= '9');
+int isOperand(char c) {
+    return (c >= 'A' && c <= 'Z');  
 }
 
 void infixtoPostfix(char infix[], char postfix[]) {
     int i = 0, j = 0;
     char ch;
+    
     while ((ch = infix[i++]) != '\0') {
-        if (isDigit(ch)) {
-            postfix[j++] = ch;
+        if (isOperand(ch)) {
+            postfix[j++] = ch; 
         } else if (ch == '(') {
-            push(ch);
+            push(ch); 
         } else if (ch == ')') {
             while (peek() != '(' && top != -1) {
                 postfix[j++] = pop();
             }
-            pop(); // remove '('
+            pop(); 
         } else if (isOperator(ch)) {
             while (top != -1 && precedence(peek()) >= precedence(ch)) {
                 postfix[j++] = pop();
             }
-            push(ch);
+            push(ch); 
         }
     }
-
     while (top != -1) {
         postfix[j++] = pop();
     }
     postfix[j] = '\0';
 }
 
-int evaluatePostfix(char postfix[]) {
-    int evalStack[Max];
-    int evalTop = -1;
-    int i = 0, op1, op2, result;
-    char ch;
-
-    while ((ch = postfix[i++]) != '\0') {
-        if (isDigit(ch)) {
-            evalStack[++evalTop] = ch - '0';
-        } else if (isOperator(ch)) {
-            op2 = evalStack[evalTop--];
-            op1 = evalStack[evalTop--];
-
-            switch (ch) {
-                case '+': result = op1 + op2; break;
-                case '-': result = op1 - op2; break;
-                case '*': result = op1 * op2; break;
-                case '/': result = op1 / op2; break;
-                case '^': {
-                    result = 1;
-                    for (int j = 0; j < op2; j++)
-                        result *= op1;
-                    break;
-                }
-            }
-            evalStack[++evalTop] = result;
-        }
-    }
-
-    return evalStack[evalTop];
-}
-
 int main() {
-    char infix[Max], postfix[Max];
-
+    char infix[100], postfix[100];
     printf("Enter infix expression: ");
     scanf("%s", infix);
-
     infixtoPostfix(infix, postfix);
-
     printf("Postfix expression: %s\n", postfix);
-    printf("Evaluated result: %d\n", evaluatePostfix(postfix));
 
     return 0;
 }
