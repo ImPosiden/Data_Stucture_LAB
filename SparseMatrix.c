@@ -29,13 +29,19 @@ void readSparse(struct Term mat[]) {
 
 // Function to display a sparse matrix
 void displaySparse(struct Term mat[]) {
-    int n = mat[0].val; // number of non-zero terms
+    int n = mat[0].val;  // Number of non-zero terms
+    int rows = mat[0].row;
+    int cols = mat[0].col;
+
+    // Display the matrix header with total rows, columns, and non-zero elements
     printf("\nRow\tCol\tVal\n");
+    printf("%d\t%d\t%d\n", rows, cols, n); // Display the dimensions and number of non-zero elements
+
+    // Display the non-zero elements
     for (int i = 1; i <= n; i++) {  // Display elements from 1 to n
         printf("%d\t%d\t%d\n", mat[i].row, mat[i].col, mat[i].val);
     }
 }
-
 
 // Function to add two sparse matrices A and B → store in C
 void addSparse(struct Term A[], struct Term B[], struct Term C[]) {
@@ -79,28 +85,25 @@ void addSparse(struct Term A[], struct Term B[], struct Term C[]) {
     C[0].val = k - 1; // Update the number of non-zero elements
 }
 
-
 // Function to transpose a sparse matrix M into T
 void transposeSparse(struct Term M[], struct Term T[]) {
-    int n = M[0].val;
-    T[0].row = M[0].col;
-    T[0].col = M[0].row;
-    T[0].val = n;
+    int n = M[0].val;  // Number of non-zero elements in M
+    T[0].row = M[0].col;  // T's row count becomes M's column count
+    T[0].col = M[0].row;  // T's column count becomes M's row count
+    T[0].val = n;  // Number of non-zero elements remains the same
 
-    int k = 1;  // Position for the transposed terms
-    for (int i = 0; i < M[0].col; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (M[j].col == i) {
-                T[k].row = M[j].col;
+    int k = 1;  // Index for filling T
+    for (int i = 1; i <= M[0].col; i++) {  // Loop through each column in M
+        for (int j = 1; j <= n; j++) {  // Loop through each non-zero element
+            if (M[j].col == i) {  // If M's column matches the current column i
+                T[k].row = M[j].col;  // Swap row and column for transpose
                 T[k].col = M[j].row;
                 T[k].val = M[j].val;
                 k++;
             }
         }
     }
-    T[0].val = k - 1;  // Update the number of non-zero elements
 }
-
 
 int main() {
     struct Term A[50], B[50], C[100], T[50];
