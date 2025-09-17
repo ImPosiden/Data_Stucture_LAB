@@ -68,12 +68,6 @@ int main() {
     Node *current = NULL;
     int choice;
     char site[100];
-    printf("\n--- Browser Menu ---\n");
-    printf("1. New Page\n");
-    printf("2. Go Backward\n");
-    printf("3. Go Forward\n");
-    printf("4. Display\n");
-    printf("5. Exit\n");
     do {
         printf("\n--- Browser Menu ---\n");
         printf("1. New Page\n");
